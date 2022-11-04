@@ -1,0 +1,26 @@
+public class Character : MonoBehaviour
+{
+    public CharacterController charControl;
+    public int speed = 5;
+    public int force = 10;
+    // Start is called before the first frame update
+    void Start()
+    {
+        charControl = GetComponent<CharacterController>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Move();
+    }
+     void Move()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        charControl.Move(transform.right * horizontal * speed* Time.deltaTime);
+        charControl.Move(transform.forward * vertical * speed * Time.deltaTime);
+        
+    }
+}
