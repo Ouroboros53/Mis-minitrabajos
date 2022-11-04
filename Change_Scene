@@ -1,0 +1,46 @@
+public class CambiarNivel : MonoBehaviour
+{
+    /// <summary>
+    /// Escena en la que se está
+    /// </summary>
+    public int numeroEscena;
+
+    /// <summary>
+    /// Texto a mostrar
+    /// </summary>
+    public GameObject Texto;
+
+    /// <summary>
+    /// Comprobar que está en contacto
+    /// </summary>
+    private bool lugar;
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.E) && lugar == true)
+        {
+            SceneManager.LoadScene(numeroEscena);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Texto.SetActive(true);
+
+            lugar = true;
+
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Texto.SetActive(false);
+
+            lugar = false;
+
+        }
+    }
+}
