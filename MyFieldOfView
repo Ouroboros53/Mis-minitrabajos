@@ -2,35 +2,72 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FieldOfView : MonoBehaviour
+public class MyFieldOfView : MonoBehaviour
 {
+
+    /// <summary>
+    /// Distancia máxima de visión
+    /// </summary>
+    /// 
     public float radius;
+
+    /// <summary>
+    /// Campo máxima de misión
+    /// </summary>
+
     public float angle;
+
+    /// <summary>
+    /// Jugador a vuscar
+    /// </summary>
 
     public GameObject playerRef;
 
+    /// <summary>
+    /// Capa en la que se encuentra el jugador
+    /// </summary>
+
     public LayerMask targetMask;
 
+    /// <summary>
+    /// Objetos que obstruyen el campo
+    /// </summary>
+    /// 
     public LayerMask obstructionMask;
+
+    /// <summary>
+    /// Puede ver al personaje
+    /// </summary>
 
     public bool canSeePlayer;
 
+    /// <summary>
+    /// Transform
+    /// </summary>
+    
     Transform tr;
 
     private void Start()
     {
-        tr= GetComponent<Transform>();
+        //Transform catching
+          tr= GetComponent<Transform>();
 
-        playerRef = GameObject.FindGameObjectWithTag("Player");
-
-        StartCoroutine(FOVRoutine());
+        //Se busca al personaje por el tag
+          playerRef = GameObject.FindGameObjectWithTag("Player");
+        //Se inicia la corutina del Campo de Visión
+          StartCoroutine(FOVRoutine());
     }
 
+    /// <summary>
+    /// Rutina del campo de visión
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator FOVRoutine()
     {
-        float delay = 0.2f;
-
-        WaitForSeconds wait = new WaitForSeconds(delay);
+        //Tiempo de espera
+          float delay = 0.2f;
+        //Tiempo que tarda en comprobar si es cierto
+         WaitForSeconds wait = new WaitForSeconds(delay);
 
         while(true)
         {
@@ -42,18 +79,25 @@ public class FieldOfView : MonoBehaviour
 
     private void FieldOfViewCheck()
     {
-        Collider[] rangeChecks = Physics.OverlapSphere(tr.position, radius, targetMask);
+        //Se crea un rango que busca en targetMak
+         Collider[] rangeChecks = Physics.OverlapSphere(tr.position, radius, targetMask);
+        //Se comprueba que coge el collider encuentra algo
         if(rangeChecks.Length != 0)
         {
-            Transform target = rangeChecks[0].transform;
+            //Se coge el transform del objetivo
+              Transform target = rangeChecks[0].transform;
+            //Dirección del target al objeto
             Vector3 directionToTarget = (target.position - tr.position).normalized;
             if (Vector3.Angle(tr.forward, directionToTarget) < angle / 2)
             {
-                float distanceToTarget = Vector3.Distance(tr.forward, target.position); 
+                //Se comprueba la distancia entre el objeto y el target
+                  float distanceToTarget = Vector3.Distance(tr.forward, target.position); 
+                //Se crea una línea entre el objeto y el target
                 if(!Physics.Raycast(tr.position,directionToTarget,distanceToTarget,obstructionMask))
                     canSeePlayer = true;
                 else
                     canSeePlayer = false;
+                
             }
             else 
             canSeePlayer = false;
@@ -62,3 +106,4 @@ public class FieldOfView : MonoBehaviour
             canSeePlayer=false;
        
     }
+}
