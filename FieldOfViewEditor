@@ -1,0 +1,39 @@
+using UnityEditor;
+using UnityEngine;
+
+
+[CustomEditor(typeof(MyFieldOfView))]
+public class FieldOfViewEditor : Editor
+{
+    private void OnSceneGUI()
+    {
+        MyFieldOfView fov = (MyFieldOfView)target;
+        Handles.color = Color.white;
+        //Crea un arco con la distancia máxima de visión
+        Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360, fov.radius);
+        //Captura él ángulo de visión máximo
+        Vector3 viewAngle01 = DirectionFromAngle(fov.transform.eulerAngles.y, fov.angle / 2);
+        Vector3 viewAngle02 = DirectionFromAngle(fov.transform.eulerAngles.y, -fov.angle / 2);
+        //Crea dos líneas que delimita el rango de visión 
+        Handles.color = Color.yellow;
+        Handles.DrawLine(fov.transform.position, fov.transform.position + viewAngle01 * fov.radius);
+        Handles.DrawLine(fov.transform.position, fov.transform.position + viewAngle02 * fov.radius);
+
+        if(fov.canSeePlayer)
+        {
+            //Se crea una línea del objeto al jugador
+            Handles.color = Color.green;
+            Handles.DrawLine(fov.transform.position, fov.playerRef.transform.position);
+
+
+        }
+    }
+
+    private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees)
+    {
+        angleInDegrees += eulerY;
+
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    
+    }
+}
